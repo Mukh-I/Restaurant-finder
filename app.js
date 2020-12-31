@@ -346,7 +346,7 @@ function renderRestaurantDetails(restaurant) {
         </div>
         <div class="col-12">
           <div class="card border-secondary mb-3" >
-            <div class="card-header">Opnening times</div>
+            <div class="card-header">Opening times</div>
             <div class="card-body text-secondary">
               <p class="card-text">${restaurant.timings}</p>
             </div>
