@@ -1,0 +1,128 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  width: 90%;
+  height: 95vh;
+  margin: 1rem auto;
+  background-color: #f1f1f1;
+}
+
+form {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  background-color: rgb(83, 83, 83);
+}
+
+form div {
+  margin-right: 5px;
+}
+
+.title {
+  color: #fff;
+  margin-right: 17%;
+  margin-bottom: 0;
+  align-self: center;
+  padding-left: 7px;
+}
+
+.wrapper {
+  display: flex;
+  height: 86vh;
+  background-color: #e1e1e1;
+}
+
+.sidebar {
+  width: 380px;
+  background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rest-list {
+  list-style: none;
+  padding-left: 0;
+  width: 100%;
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.restaurant {
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #e1e1e1;
+  cursor: pointer;
+  border-left: 6px solid transparent;
+  transition: all 0.5s ease;
+}
+
+.restaurant:hover {
+  border-left-color: #535353;
+}
+
+.active {
+  border-left-color: #535353;
+}
+
+.restaurant img {
+  width: 53px;
+  height: 53px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.restaurant div p {
+  margin-bottom: 0;
+}
+
+.sidebar-footer {
+  padding: 6px 0;
+}
+
+.btn-container {
+  display: flex;
+  padding: 10px;
+}
+
+.page-num {
+  text-align: center;
+}
+
+.next,
+.prev {
+  padding: 4px;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #6b6b6b;
+  color: #fff;
+}
+
+.next {
+  margin-left: auto;
+}
+
+.content {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+}
+
+.card {
+  border: none;
+  background-color: transparent;
+}
+
+.card-body {
+  color: #000 !important;
+}
+
+.card-img-top {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
