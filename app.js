@@ -15,9 +15,9 @@ EVENT LISTENERS
 
 document.addEventListener("DOMContentLoaded", async function () {
   PageNumDiv.innerHTML = "";
-  if (!JSON.parse(localStorage.getItem("searchHistory"))) {
+  if (!JSON.parse(localStorage.getItem("storedData"))) {
     localStorage.setItem(
-      "searchHistory",
+      "storedData",
       JSON.stringify({
         restaurants: [],
         restaurantInfo: null,
@@ -26,26 +26,26 @@ document.addEventListener("DOMContentLoaded", async function () {
       })
     );
   }
-  const searchHistory = getDataFromLocalStorage();
-  if (searchHistory.restaurants.length > 0) {
+  const storedData = getDataFromLocalStorage();
+  if (storedData.restaurants.length > 0) {
     restaurantList.innerHTML = "";
 
-    const result = paginate(searchHistory.restaurants, searchHistory.page);
+    const result = paginate(storedData.restaurants, storedData.page);
     result.forEach(function ({ restaurant }) {
       renderRestaurant(restaurant, restaurantList);
     });
 
-    if (searchHistory.restaurantInfo !== null) {
-      renderRestaurantDetails(searchHistory.restaurantInfo);
+    if (storedData.restaurantInfo !== null) {
+      renderRestaurantDetails(storedData.restaurantInfo);
     }
-    renderBtn(searchHistory.restaurants);
+    renderBtn(storedData.restaurants);
     currentPage();
   }
-  if (searchHistory.cuisines.length > 0) {
-    return renderCuisinesOptions(searchHistory.cuisines);
+  if (storedData.cuisines.length > 0) {
+    return renderCuisinesOptions(storedData.cuisines);
   }
 
-  if (searchHistory.cuisines.length < 1) {
+  if (storedData.cuisines.length < 1) {
     await getCuisines().catch(function () {
       return (restaurantList.innerHTML = renderErrorMsg(
         "Your location is disabled"
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 // fetch and display restaurant info
 restaurantList.addEventListener("click", async function (e) {
-  const searchHistory = getDataFromLocalStorage();
+  const storedData = getDataFromLocalStorage();
   content.innerHTML = "";
   renderLoadingSpinner(content);
   const target = e.target.closest(".restaurant");
@@ -77,24 +77,24 @@ restaurantList.addEventListener("click", async function (e) {
     const err = renderErrorMsg("This restaurant does not exist");
     return (content.innerHTML = err);
   }
-  searchHistory.restaurantInfo = restaurant;
-  persistDataToLocalStorage(searchHistory);
+  storedData.restaurantInfo = restaurant;
+  persistDataToLocalStorage(storedData);
   renderRestaurantDetails(restaurant);
 });
 
 // pagination
 btnContainer.addEventListener("click", function (e) {
   if (e.target.tagName !== "BUTTON") return;
-  const searchHistory = getDataFromLocalStorage();
-  searchHistory.page = Number(e.target.dataset.num);
-  persistDataToLocalStorage(searchHistory);
-  const result = paginate(searchHistory.restaurants, searchHistory.page);
+  const storedData = getDataFromLocalStorage();
+  storedData.page = Number(e.target.dataset.num);
+  persistDataToLocalStorage(storedData);
+  const result = paginate(storedData.restaurants, storedData.page);
   restaurantList.innerHTML = "";
   result.forEach(function ({ restaurant }) {
     renderRestaurant(restaurant, restaurantList);
   });
 
-  renderBtn(searchHistory.restaurants);
+  renderBtn(storedData.restaurants);
   currentPage();
 });
 
@@ -125,7 +125,7 @@ HELPER FUNCTIONS
 async function getRestaurants() {
   btnContainer.innerHTML = "";
   PageNumDiv.innerHTML = "";
-  const searchHistory = getDataFromLocalStorage();
+  const storedData = getDataFromLocalStorage();
   const location = await getLocation();
   const coords = location.coords;
   const selectedOption = Number(
@@ -151,9 +151,9 @@ async function getRestaurants() {
     return (restaurantList.innerHTML = error);
   }
   const { restaurants } = data;
-  searchHistory.restaurants = restaurants;
-  searchHistory.page = 1;
-  persistDataToLocalStorage(searchHistory);
+  storedData.restaurants = restaurants;
+  storedData.page = 1;
+  persistDataToLocalStorage(storedData);
   restaurantList.innerHTML = "";
   const result = paginate(restaurants);
   result.forEach(function ({ restaurant }) {
@@ -166,21 +166,20 @@ async function getRestaurants() {
 
 async function getCuisines() {
   const location = await getLocation();
-  const searchHistory = getDataFromLocalStorage();
+  const storedData = getDataFromLocalStorage();
   let cuisines;
-  if (searchHistory.cuisines.length === 0) {
+  if (storedData.cuisines.length === 0) {
     const coords = location.coords;
-
     const cuisineUrl = `https://developers.zomato.com/api/v2.1/cuisines?lat=${coords.latitude}&lon=${coords.longitude}`;
 
     const data = await fetchData(cuisineUrl);
 
     cuisines = data.cuisines;
-    searchHistory.cuisines = cuisines;
-    persistDataToLocalStorage(searchHistory);
+    storedData.cuisines = cuisines;
+    persistDataToLocalStorage(storedData);
   }
 
-  cuisines = searchHistory.cuisines;
+  cuisines = storedData.cuisines;
   renderCuisinesOptions(cuisines);
 }
 
@@ -254,12 +253,11 @@ function currentPage() {
 }
 
 function persistDataToLocalStorage(data) {
-  localStorage.setItem("searchHistory", JSON.stringify(data));
+  localStorage.setItem("storedData", JSON.stringify(data));
 }
 
 function getDataFromLocalStorage() {
-  const storedData = JSON.parse(localStorage.getItem("searchHistory"));
-  return storedData;
+  return JSON.parse(localStorage.getItem("storedData"));
 }
 
 function getLocation() {
